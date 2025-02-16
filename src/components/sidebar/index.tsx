@@ -1,5 +1,5 @@
 import React from 'react'
-import { Calendar, Home, Inbox, Search, Settings } from 'lucide-react'
+import { Home, Inbox } from 'lucide-react'
 import { Link } from 'react-router'
 
 import {
