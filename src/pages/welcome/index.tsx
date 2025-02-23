@@ -4,7 +4,6 @@ import { open } from '@tauri-apps/plugin-dialog'
 
 export default function Home() {
     const openFileDialog = async () => {
-        console.log('click')
         const file = await open({
             multiple: false,
             directory: true,
