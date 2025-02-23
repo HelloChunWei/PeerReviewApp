@@ -1,13 +1,13 @@
 import React from 'react'
-import { SidebarTrigger } from '@/components/ui/sidebar'
-import { useCenterStore } from '@/store'
+import FolderSvg from '@/assets/folder.svg'
 
 export default function Home() {
-    const path = useCenterStore((state) => state.path)
     return (
-        <main>
-            {path ? <SidebarTrigger /> : <></>}
-            <h1>Welcome </h1>
+        <main className="min-h-svh flex w-full justify-center items-center flex-col">
+            <h1 className="font-bold text-2xl">
+                Please select you folder to save your review{' '}
+            </h1>
+            <img className="w-[200px] cursor-pointer" src={FolderSvg} />
         </main>
     )
 }
