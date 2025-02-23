@@ -1,14 +1,29 @@
 import React from 'react'
 import FolderSvg from '@/assets/folder.svg'
 import { open } from '@tauri-apps/plugin-dialog'
+import { savePath } from '@/utils/file'
+import { useCenterStore } from '@/store'
+import { useNavigate } from 'react-router'
+import { toast } from 'sonner'
+import { Toaster } from '@/components/ui/sonner'
 
 export default function Home() {
+    const setSavePath = useCenterStore((state) => state.setSavePath)
+    const navigate = useNavigate()
+
     const openFileDialog = async () => {
-        const file = await open({
-            multiple: false,
-            directory: true,
-        })
-        console.log(file)
+        try {
+            const file = await open({
+                multiple: false,
+                directory: true,
+            })
+            if (!file) return
+            await savePath(file)
+            setSavePath(file)
+            navigate('/')
+        } catch (e) {
+            toast('something went wrong')
+        }
     }
     return (
         <main className="min-h-svh flex w-full justify-center items-center flex-col">
@@ -20,6 +35,7 @@ export default function Home() {
                 src={FolderSvg}
                 onClick={openFileDialog}
             />
+            <Toaster />
         </main>
     )
 }
