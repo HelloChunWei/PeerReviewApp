@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Home, Inbox, CirclePlus } from 'lucide-react'
 import { Link } from 'react-router'
 import TestDialog from '@/components/dialogs/TestDialog'
+import useDialog from '@/hooks/useDialog'
 
 import {
     Sidebar,
@@ -29,12 +30,13 @@ const items = [
 ]
 
 export function AppSidebar() {
-    const [isOpen, setIsOpen] = useState(false)
+    const { openDialog, closeDialog } = useDialog()
+
     const onClick = () => {
-        setIsOpen(true)
-    }
-    const close = () => {
-        setIsOpen(false)
+        openDialog(TestDialog)
+        setTimeout(() => {
+            closeDialog()
+        }, 3000)
     }
     return (
         <Sidebar>
@@ -65,7 +67,6 @@ export function AppSidebar() {
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
-            <TestDialog isOpen={isOpen} close={close} />
         </Sidebar>
     )
 }
