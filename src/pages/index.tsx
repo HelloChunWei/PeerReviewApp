@@ -3,7 +3,6 @@ import { SidebarTrigger } from '@/components/ui/sidebar'
 import { useNavigate } from 'react-router'
 import { getSaveFilePath } from '@/utils/file'
 import { formatDate, getThreeDays } from '@/utils/dayjs'
-import { LoaderCircle } from 'lucide-react'
 import { clsx } from 'clsx/lite'
 import { useIntersectionObserver } from 'usehooks-ts'
 

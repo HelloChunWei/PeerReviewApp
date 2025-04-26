@@ -1,6 +1,7 @@
-import React from 'react'
-import { Home, Inbox } from 'lucide-react'
+import React, { useState } from 'react'
+import { Home, Inbox, CirclePlus } from 'lucide-react'
 import { Link } from 'react-router'
+import TestDialog from '@/components/dialogs/TestDialog'
 
 import {
     Sidebar,
@@ -28,12 +29,27 @@ const items = [
 ]
 
 export function AppSidebar() {
+    const [isOpen, setIsOpen] = useState(false)
+    const onClick = () => {
+        setIsOpen(true)
+    }
+    const close = () => {
+        setIsOpen(false)
+    }
     return (
         <Sidebar>
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Application</SidebarGroupLabel>
+                    <SidebarGroupLabel>Peer Review</SidebarGroupLabel>
                     <SidebarGroupContent>
+                        <SidebarMenu>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton onClick={onClick}>
+                                    <CirclePlus />
+                                    <span>Add new review</span>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
                         <SidebarMenu>
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
@@ -49,6 +65,7 @@ export function AppSidebar() {
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
+            <TestDialog isOpen={isOpen} close={close} />
         </Sidebar>
     )
 }
