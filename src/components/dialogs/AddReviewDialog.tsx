@@ -51,6 +51,7 @@ export default function AddReviewDialog({
                             Colleague name
                         </Label>
                         <Input
+                            isError
                             value={colleagueName}
                             onChange={(e) => {
                                 setColleagueName(e.target.value)
