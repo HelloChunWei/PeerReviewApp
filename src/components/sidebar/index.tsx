@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Home, Inbox, CirclePlus } from 'lucide-react'
 import { Link } from 'react-router'
-import TestDialog from '@/components/dialogs/TestDialog'
+import AddReviewDialog from '@/components/dialogs/AddReviewDialog'
 import useDialog from '@/hooks/useDialog'
 
 import {
@@ -30,13 +30,10 @@ const items = [
 ]
 
 export function AppSidebar() {
-    const { openDialog, closeDialog } = useDialog()
+    const { openDialog } = useDialog()
 
     const onClick = () => {
-        openDialog(TestDialog)
-        setTimeout(() => {
-            closeDialog()
-        }, 3000)
+        openDialog(AddReviewDialog)
     }
     return (
         <Sidebar>
@@ -48,7 +45,7 @@ export function AppSidebar() {
                             <SidebarMenuItem>
                                 <SidebarMenuButton onClick={onClick}>
                                     <CirclePlus />
-                                    <span>Add new review</span>
+                                    <span>Add new work log</span>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         </SidebarMenu>
