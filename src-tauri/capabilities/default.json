@@ -9,6 +9,9 @@
     "core:default",
     "opener:default",
     "store:default",
-    "dialog:default"
+    "dialog:default",
+    "fs:default",
+    "fs:allow-desktop-write",
+    "fs:allow-desktop-write-recursive"
   ]
 }

@@ -1,4 +1,10 @@
 import { load } from '@tauri-apps/plugin-store'
+import { readDir, mkdir, BaseDirectory, create, exists } from '@tauri-apps/plugin-fs';
+import dayjs from 'dayjs';
+
+
+const reviewFolder = 'reviews'
+const resultFolder = 'results'
 
 // action
 export const getSaveFilePath = async() => {
@@ -7,7 +13,7 @@ export const getSaveFilePath = async() => {
     */
     const store = await load('PeerReviewApp.json', { autoSave: false })
     // Get a path
-    const path = await store.get<{ value: number }>('save_path')
+    const path = await store.get<{ value: string }>('save_path')
     return path
 }
 
@@ -16,4 +22,64 @@ export const savePath = async(path: string) => {
     const store = await load('PeerReviewApp.json', { autoSave: false });
     await store.set('save_path', { value: path });
     await store.save();
+}
+
+const createFolderIfNotExist = async (path: string, folderName: string) => {
+    const folderPath = `${path}/${folderName}`;
+    await mkdir(folderPath, { baseDir: BaseDirectory.AppLocalData });
+};
+
+const createFile = async (filename: string) => {
+    const isExist = await exists(`${filename}`, { baseDir: BaseDirectory.AppLocalData });
+      if (isExist) throw new Error('A work log for this colleague already exists for this date')
+    const file = await create(`${filename}`, { baseDir: BaseDirectory.AppData });
+    await file.close();
+}
+
+const createPathAndFileName = (payload: {
+    path: string,
+    folderName: string,
+    fileName: string,
+}) => `${payload.path}/${payload.folderName}/${payload.fileName}`;
+
+
+export const createReview = async(date: Date, colleagueName: string) =>{
+    try {
+        const path = await getSaveFilePath();
+        if (!path?.value) throw new Error('save path not found');
+
+        const entries = await readDir(path.value, { baseDir: BaseDirectory.AppLocalData });
+
+        if (entries.length === 0) {
+            await createFolderIfNotExist(path.value, reviewFolder);
+            await createFolderIfNotExist(path.value, resultFolder);
+        } else {
+            const existingFolders = new Set(
+                entries
+                    .filter(entry => entry.isDirectory)
+                    .map(entry => entry.name)
+            );
+
+            if (!existingFolders.has(reviewFolder)) {
+                await createFolderIfNotExist(path.value, reviewFolder);
+            }
+            if (!existingFolders.has(resultFolder)) {
+                await createFolderIfNotExist(path.value, resultFolder);
+            }
+        }
+
+        const filePathAndName = createPathAndFileName({
+            path: path.value,
+            folderName: reviewFolder,
+            fileName: `${dayjs(date).format('YYYY-MM-DD')}_${colleagueName}.md`
+        })
+
+        await createFile(filePathAndName)
+
+
+    } catch (e) {
+        console.error(e)
+        throw e
+    }
+
 }

@@ -13,6 +13,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import DatePicker from '@/components/datePicker'
 import { z } from 'zod'
+import { createReview } from '@/utils/file/'
+import { useToast } from '@/hooks/use-toast'
 
 const reviewSchema = z.object({
     date: z.date(),
@@ -28,11 +30,12 @@ export default function AddReviewDialog({
     isOpen,
     close,
 }: AddReviewDialogProps) {
+    const { toast } = useToast()
     const [date, setDate] = useState<Date>(new Date())
     const [colleagueName, setColleagueName] = useState('')
     const [error, setError] = useState<string | null>(null)
 
-    const submit = () => {
+    const submit = async () => {
         try {
             reviewSchema.parse({
                 date,
@@ -42,7 +45,23 @@ export default function AddReviewDialog({
             setError(null)
             console.log(date)
             console.log(colleagueName)
+            const capitalized =
+                colleagueName.charAt(0).toUpperCase() + colleagueName.slice(1)
+            await createReview(date, capitalized)
+            toast({
+                description: 'Add successfully',
+            })
+            setTimeout(() => {
+                close()
+            }, 500)
         } catch (err) {
+            if (err && typeof err === 'object' && 'message' in err) {
+                console.log('dsadas')
+                toast({
+                    variant: 'destructive',
+                    description: err.message as string,
+                })
+            }
             if (err instanceof z.ZodError) {
                 setError(err.errors[0].message)
             }
@@ -84,7 +103,7 @@ export default function AddReviewDialog({
                 </div>
                 <DialogFooter>
                     <Button
-                        onClick={(e) => {
+                        onClick={() => {
                             submit()
                         }}
                     >
