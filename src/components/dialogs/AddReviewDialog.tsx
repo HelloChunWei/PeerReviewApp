@@ -43,8 +43,6 @@ export default function AddReviewDialog({
             })
 
             setError(null)
-            console.log(date)
-            console.log(colleagueName)
             const capitalized =
                 colleagueName.charAt(0).toUpperCase() + colleagueName.slice(1)
             await createReview(date, capitalized)
@@ -56,7 +54,6 @@ export default function AddReviewDialog({
             }, 0)
         } catch (err) {
             if (err && typeof err === 'object' && 'message' in err) {
-                console.log('dsadas')
                 toast({
                     variant: 'destructive',
                     description: err.message as string,

@@ -100,9 +100,8 @@ export const getReviewFile =  async (unitTime: number) => {
         const path = await getSaveFilePath()
         if (!path?.value) throw new Error('save path not found')
         const combinePath = `${path.value}/${reviewFolder}/${dateFormat}`
-        console.log(combinePath)
         const contents = await exists(combinePath, { baseDir: BaseDirectory.Resource })
-        console.log(contents)
+        return contents
     } catch (e) {
         console.error(e)
         throw e

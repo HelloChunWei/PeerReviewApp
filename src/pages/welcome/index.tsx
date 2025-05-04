@@ -6,10 +6,13 @@ import { useCenterStore } from '@/store'
 import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
 import { Toaster } from '@/components/ui/sonner'
+import { useSidebar } from '@/components/ui/sidebar'
 
 export default function Home() {
     const setSavePath = useCenterStore((state) => state.setSavePath)
     const navigate = useNavigate()
+    const { toggleSidebar } = useSidebar()
+    toggleSidebar(false)
 
     const openFileDialog = async () => {
         try {

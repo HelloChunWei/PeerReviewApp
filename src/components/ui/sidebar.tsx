@@ -31,7 +31,7 @@ type SidebarContext = {
     openMobile: boolean
     setOpenMobile: (open: boolean) => void
     isMobile: boolean
-    toggleSidebar: () => void
+    toggleSidebar: (open?: boolean) => void
 }
 
 const SidebarContext = React.createContext<SidebarContext | null>(null)
@@ -55,7 +55,7 @@ const SidebarProvider = React.forwardRef<
 >(
     (
         {
-            defaultOpen = false,
+            defaultOpen = true,
             open: openProp,
             onOpenChange: setOpenProp,
             className,
@@ -89,11 +89,14 @@ const SidebarProvider = React.forwardRef<
         )
 
         // Helper to toggle the sidebar.
-        const toggleSidebar = React.useCallback(() => {
-            return isMobile
-                ? setOpenMobile((open) => !open)
-                : setOpen((open) => !open)
-        }, [isMobile, setOpen, setOpenMobile])
+        const toggleSidebar = React.useCallback(
+            (open?: boolean) => {
+                return isMobile
+                    ? setOpenMobile((prev) => open ?? !prev)
+                    : setOpen((prev) => open ?? !prev)
+            },
+            [isMobile, setOpen, setOpenMobile]
+        )
 
         // Adds a keyboard shortcut to toggle the sidebar.
         React.useEffect(() => {
@@ -310,7 +313,7 @@ const SidebarRail = React.forwardRef<
             data-sidebar="rail"
             aria-label="Toggle Sidebar"
             tabIndex={-1}
-            onClick={toggleSidebar}
+            onClick={() => toggleSidebar()}
             title="Toggle Sidebar"
             className={cn(
                 'absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] hover:after:bg-sidebar-border group-data-[side=left]:-right-4 group-data-[side=right]:left-0 sm:flex',
