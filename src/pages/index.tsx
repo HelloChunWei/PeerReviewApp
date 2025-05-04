@@ -7,6 +7,7 @@ import { clsx } from 'clsx/lite'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { getAllReviewFile } from '@/utils/file'
 import { useCenterStore } from '@/store'
+import { Link } from 'react-router'
 
 function App() {
     const { isIntersecting, ref } = useIntersectionObserver({
@@ -58,7 +59,11 @@ function App() {
                             </h1>
                             <ul className="list-disc pl-5">
                                 {getSameDateReview(date).map((data) => (
-                                    <li key={data.key}>{data.name}</li>
+                                    <li key={data.key}>
+                                        <Link to={`colleague/${data.key}`}>
+                                            {data.name}
+                                        </Link>
+                                    </li>
                                 ))}
                             </ul>
                         </div>

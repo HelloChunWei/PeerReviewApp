@@ -1,5 +1,5 @@
 import React from 'react'
-import { Home, Inbox, CirclePlus } from 'lucide-react'
+import { Home, CirclePlus } from 'lucide-react'
 import { Link } from 'react-router'
 import AddReviewDialog from '@/components/dialogs/AddReviewDialog'
 import useDialog from '@/hooks/useDialog'
@@ -18,13 +18,8 @@ import {
 // Menu items.
 const items = [
     {
-        title: 'Inbox',
-        url: '/',
-        icon: Inbox,
-    },
-    {
         title: 'Home',
-        url: '/home',
+        url: '/',
         icon: Home,
     },
 ]

@@ -53,7 +53,7 @@ export default function AddReviewDialog({
             })
             setTimeout(() => {
                 close()
-            }, 500)
+            }, 0)
         } catch (err) {
             if (err && typeof err === 'object' && 'message' in err) {
                 console.log('dsadas')

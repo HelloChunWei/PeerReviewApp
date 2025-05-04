@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import Home from '@/pages/home'
+import Colleague from '@/pages/colleague'
 import Welcome from '@/pages/welcome'
 import { BrowserRouter, Routes, Route } from 'react-router'
 import Layout from './layout'
@@ -16,6 +17,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
                     <Route index element={<App />} />
                     <Route path="home" element={<Home />} />
                     <Route path="welcome" element={<Welcome />} />
+                    <Route path="colleague/:key" element={<Colleague />} />
                 </Route>
             </Routes>
         </BrowserRouter>
