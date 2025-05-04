@@ -1,5 +1,5 @@
 import React from 'react'
-import AppIndex from '@/pages/index'
+import AppIndex from '@/pages/home'
 
 function App() {
     return <AppIndex />
