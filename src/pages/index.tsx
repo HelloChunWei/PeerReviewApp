@@ -5,6 +5,8 @@ import { getSaveFilePath } from '@/utils/file'
 import { formatDate, getThreeDays } from '@/utils/dayjs'
 import { clsx } from 'clsx/lite'
 import { useIntersectionObserver } from 'usehooks-ts'
+import { getAllReviewFile } from '@/utils/file'
+import { useCenterStore } from '@/store'
 
 function App() {
     const { isIntersecting, ref } = useIntersectionObserver({
@@ -12,7 +14,11 @@ function App() {
     })
 
     const navigate = useNavigate()
+    const setReviewResult = useCenterStore((state) => state.setReviewResult)
+    const getSameDateReview = useCenterStore((state) => state.getSameDateReview)
     const [dateList, setDateList] = useState(() => getThreeDays())
+
+    getAllReviewFile().then((result) => setReviewResult(result))
     useEffect(() => {
         let ignore = false
         getSaveFilePath().then((path) => {
@@ -51,7 +57,9 @@ function App() {
                                 {formatDate(date)}
                             </h1>
                             <ul className="list-disc pl-5">
-                                <li></li>
+                                {getSameDateReview(date).map((data) => (
+                                    <li key={data.key}>{data.name}</li>
+                                ))}
                             </ul>
                         </div>
                     ))}
