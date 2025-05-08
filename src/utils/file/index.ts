@@ -1,5 +1,5 @@
 import { load } from '@tauri-apps/plugin-store'
-import { readDir, mkdir, BaseDirectory, create, exists, readTextFile, writeTextFile } from '@tauri-apps/plugin-fs'
+import { readDir, mkdir, BaseDirectory, create, exists, readTextFile, writeTextFile, remove } from '@tauri-apps/plugin-fs'
 import dayjs from 'dayjs'
 
 const reviewFolder = 'reviews'
@@ -125,6 +125,18 @@ export const saveFile = async (fileName: string, content: string) => {
         const combinePath = `${path.value}/${reviewFolder}/${fileName}.md`
         const contents = await writeTextFile(combinePath, content, { baseDir: BaseDirectory.AppLocalData })
         return contents
+    } catch (e) {
+        console.error(e)
+        throw e
+    }
+}
+
+export const deleteFile = async(fileName: string) => {
+    try {
+        const path = await getSaveFilePath()
+        if (!path?.value) throw new Error('save path not found')
+        const combinePath = `${path.value}/${reviewFolder}/${fileName}.md`
+        await remove(combinePath, { baseDir: BaseDirectory.AppLocalData })
     } catch (e) {
         console.error(e)
         throw e

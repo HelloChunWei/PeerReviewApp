@@ -20,25 +20,32 @@ import '@mdxeditor/editor/style.css'
 import { getReviewFile, saveFile } from '@/utils/file'
 import { useDebounceCallback } from 'usehooks-ts'
 import { Ellipsis } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import DeleteFileDialog from '@/components/dialogs/DeleteFileDialog'
 
 export default function Colleague() {
     const { key } = useParams()
     const [content, setContent] = useState('')
+    const [isOpen, setOpen] = useState(false)
     const [mdxKey, setKey] = useState(0)
 
     const debounced = useDebounceCallback((value) => {
         setContent(value)
         saveFile(key || '', value)
     }, 500)
+
+    const showDeleteDialog = () => {
+        // Due to conflict between dropdownMenu and dialog behaviors,
+        // need to setTimeout 0 to ensure dropdown is fully destroyed before showing dialog
+        setTimeout(() => {
+            setOpen(true)
+        }, 0)
+    }
 
     useEffect(() => {
         getReviewFile(key || '').then((worklog) => {
@@ -57,7 +64,9 @@ export default function Colleague() {
                         <Ellipsis />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                        <DropdownMenuItem>Delete file</DropdownMenuItem>
+                        <DropdownMenuItem onClick={showDeleteDialog}>
+                            Delete file
+                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
                 <div className="mx-auto w-3/4">
@@ -90,6 +99,11 @@ export default function Colleague() {
                     </div>
                 </div>
             </div>
+            <DeleteFileDialog
+                isOpen={isOpen}
+                close={() => setOpen(false)}
+                file={key || ''}
+            />
         </main>
     )
 }
