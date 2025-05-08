@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { useParams } from 'react-router'
 import {
@@ -14,45 +14,81 @@ import {
     InsertThematicBreak,
     ListsToggle,
     UndoRedo,
-    codeBlockPlugin,
-    codeMirrorPlugin,
     CodeToggle,
 } from '@mdxeditor/editor'
 import '@mdxeditor/editor/style.css'
+import { getReviewFile, saveFile } from '@/utils/file'
+import { useDebounceCallback } from 'usehooks-ts'
+import { Ellipsis } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
 export default function Colleague() {
     const { key } = useParams()
+    const [content, setContent] = useState('')
+    const [mdxKey, setKey] = useState(0)
+
+    const debounced = useDebounceCallback((value) => {
+        setContent(value)
+        saveFile(key || '', value)
+    }, 500)
+
+    useEffect(() => {
+        getReviewFile(key || '').then((worklog) => {
+            setContent(worklog)
+            setKey((prev) => prev + 1)
+        })
+    }, [])
+
     return (
-        <main className="p-4">
-            <SidebarTrigger />
-            <h1 className="mb-4">{key}</h1>
-            <div className="dark-theme prose dark:prose-invert max-w-none">
-                <MDXEditor
-                    onChange={(value) => {
-                        console.log(value)
-                    }}
-                    markdown="# Hello world"
-                    contentEditableClassName="prose"
-                    plugins={[
-                        headingsPlugin(),
-                        quotePlugin(),
-                        listsPlugin(),
-                        thematicBreakPlugin(),
-                        markdownShortcutPlugin(),
-                        toolbarPlugin({
-                            toolbarContents: () => (
-                                <>
-                                    <CodeToggle />
-                                    <UndoRedo />
-                                    <BoldItalicUnderlineToggles />
-                                    <BlockTypeSelect />
-                                    <InsertThematicBreak />
-                                    <ListsToggle />
-                                </>
-                            ),
-                        }),
-                    ]}
-                />
+        <main className="min-h-svh flex flex-1 relative">
+            <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+                <SidebarTrigger />
+
+                <DropdownMenu>
+                    <DropdownMenuTrigger className="absolute right-6">
+                        <Ellipsis />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <DropdownMenuItem>Delete file</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+                <div className="mx-auto w-3/4">
+                    <div className="mb-4 dark-theme prose dark:prose-invert max-w-none">
+                        <MDXEditor
+                            key={mdxKey}
+                            onChange={debounced}
+                            markdown={content}
+                            contentEditableClassName="prose"
+                            plugins={[
+                                headingsPlugin(),
+                                quotePlugin(),
+                                listsPlugin(),
+                                thematicBreakPlugin(),
+                                markdownShortcutPlugin(),
+                                toolbarPlugin({
+                                    toolbarContents: () => (
+                                        <>
+                                            <CodeToggle />
+                                            <UndoRedo />
+                                            <BoldItalicUnderlineToggles />
+                                            <BlockTypeSelect />
+                                            <InsertThematicBreak />
+                                            <ListsToggle />
+                                        </>
+                                    ),
+                                }),
+                            ]}
+                        />
+                    </div>
+                </div>
             </div>
         </main>
     )

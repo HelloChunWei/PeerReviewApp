@@ -1,5 +1,5 @@
 import { load } from '@tauri-apps/plugin-store'
-import { readDir, mkdir, BaseDirectory, create, exists } from '@tauri-apps/plugin-fs'
+import { readDir, mkdir, BaseDirectory, create, exists, readTextFile, writeTextFile } from '@tauri-apps/plugin-fs'
 import dayjs from 'dayjs'
 
 const reviewFolder = 'reviews'
@@ -94,13 +94,12 @@ export const createReview = async(date: Date, colleagueName: string) =>{
 
 }
 // calculate
-export const getReviewFile =  async (unitTime: number) => {
+export const getReviewFile =  async (name: string) => {
     try {
-        const dateFormat = dayjs(unitTime).format('YYYY-MM-DD')
         const path = await getSaveFilePath()
         if (!path?.value) throw new Error('save path not found')
-        const combinePath = `${path.value}/${reviewFolder}/${dateFormat}`
-        const contents = await exists(combinePath, { baseDir: BaseDirectory.Resource })
+        const combinePath = `${path.value}/${reviewFolder}/${name}.md`
+        const contents = await readTextFile(combinePath, { baseDir: BaseDirectory.AppLocalData })
         return contents
     } catch (e) {
         console.error(e)
@@ -117,4 +116,17 @@ export const getAllReviewFile = async () => {
     const resultList = entries.filter(entry => pathRegx.test(entry.name) && entry.isFile)
       .map(entry => entry.name)
     return resultList
+}
+
+export const saveFile = async (fileName: string, content: string) => {
+    try {
+        const path = await getSaveFilePath()
+        if (!path?.value) throw new Error('save path not found')
+        const combinePath = `${path.value}/${reviewFolder}/${fileName}.md`
+        const contents = await writeTextFile(combinePath, content, { baseDir: BaseDirectory.AppLocalData })
+        return contents
+    } catch (e) {
+        console.error(e)
+        throw e
+    }
 }
