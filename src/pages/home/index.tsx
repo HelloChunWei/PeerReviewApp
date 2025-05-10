@@ -10,7 +10,7 @@ import { useCenterStore } from '@/store'
 import { Link } from 'react-router'
 import { Play } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import useDialog from '@/hooks/useDialog'
+import useDialog from '@/hooks/use-dialog'
 import ChooseAIToolDialog from '@/components/dialogs/ChoseAItoolDialog'
 
 function App() {

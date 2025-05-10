@@ -2,7 +2,7 @@ import React from 'react'
 import { Home, CirclePlus } from 'lucide-react'
 import { Link } from 'react-router'
 import AddReviewDialog from '@/components/dialogs/AddReviewDialog'
-import useDialog from '@/hooks/useDialog'
+import useDialog from '@/hooks/use-dialog'
 
 import {
     Sidebar,

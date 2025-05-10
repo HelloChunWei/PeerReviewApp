@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { getAIKey } from '@/utils/file'
 import { useCenterStore } from '@/store'
-import useDialog from '@/hooks/useDialog'
+import useDialog from '@/hooks/use-dialog'
 import AddAiKeyDialog from './AddAiKeyDialog'
 import ChooseQuarterDialog from './ChooseQuarterDialog'
 
