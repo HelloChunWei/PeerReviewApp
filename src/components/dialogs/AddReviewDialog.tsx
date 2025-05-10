@@ -53,14 +53,15 @@ export default function AddReviewDialog({
                 close()
             }, 0)
         } catch (err) {
+            if (err instanceof z.ZodError) {
+                setError(err.errors[0].message)
+                return
+            }
             if (err && typeof err === 'object' && 'message' in err) {
                 toast({
                     variant: 'destructive',
                     description: err.message as string,
                 })
-            }
-            if (err instanceof z.ZodError) {
-                setError(err.errors[0].message)
             }
         }
     }

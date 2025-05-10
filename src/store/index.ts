@@ -15,16 +15,20 @@ type SameDateReviewType = {
 interface Center {
   path: string
   reviewResult: string[]
+  choosedAiTool: string
   setSavePath: (pathString: string) => void
   setReviewResult: (result: string[]) => void
+  setAiTool: (result: string) => void
   getReviewMap: () => ReviewMap
   getSameDateReview: (date: number) => SameDateReviewType
+  
 } 
 
 export const useCenterStore = create<Center>()((set, get) => ({
     // state ====
     path: '',
     reviewResult: [],
+    choosedAiTool: '',
     // getter ==== 
     getReviewMap: () => {
       const list = get().reviewResult
@@ -61,4 +65,5 @@ export const useCenterStore = create<Center>()((set, get) => ({
       if (isSame) return {}
       return  {reviewResult: result}
     }),
+    setAiTool: (result) =>set(() => ({ choosedAiTool:  result })),
   }));

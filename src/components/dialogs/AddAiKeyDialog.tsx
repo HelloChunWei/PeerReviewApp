@@ -10,38 +10,39 @@ import {
     DialogClose,
 } from '@/components/ui/dialog'
 import { useToast } from '@/hooks/use-toast'
-import { Label } from '@/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { getAIKey } from '@/utils/file'
 import { useCenterStore } from '@/store'
-import useDialog from '@/hooks/useDialog'
-import AddAiKeyDialog from './AddAiKeyDialog'
+import { Input } from '@/components/ui/input'
+import { saveAiKey } from '@/utils/file'
+import { z } from 'zod'
 
-interface ChooseAIToolDialogProps {
+interface AddAiKeyDialogProps {
     isOpen: boolean
     close: () => void
 }
 
-export default function ChooseAIToolDialog({
-    isOpen,
-    close,
-}: ChooseAIToolDialogProps) {
+const reviewSchema = z.object({
+    key: z.string().min(1, 'Key cannot be empty'),
+})
+
+export default function AddAiKeyDialog({ isOpen, close }: AddAiKeyDialogProps) {
     const { toast } = useToast()
-    const { openDialog } = useDialog()
-    const setAiTool = useCenterStore((state) => state.setAiTool)
-    const [aiModel, setAiModel] = useState('openAi')
+    const choosedAiTool = useCenterStore((state) => state.choosedAiTool)
+    const [key, setKey] = useState('')
+    const [error, setError] = useState<string | null>(null)
 
     const submit = async () => {
         try {
-            console.log(aiModel)
-            setAiTool(aiModel)
-            await getAIKey(aiModel)
+            reviewSchema.parse({
+                key,
+            })
+            setError(null)
+            await saveAiKey(choosedAiTool, key)
         } catch (err) {
+            if (err instanceof z.ZodError) {
+                setError(err.errors[0].message)
+                return
+            }
             if (err && typeof err === 'object' && 'message' in err) {
-                close()
-                setTimeout(() => {
-                    openDialog(AddAiKeyDialog)
-                }, 300)
                 toast({
                     variant: 'destructive',
                     description: err.message as string,
@@ -58,23 +59,22 @@ export default function ChooseAIToolDialog({
                 }}
             >
                 <DialogHeader>
-                    <DialogTitle> Please choose your AI tool</DialogTitle>
+                    <DialogTitle> Please save your AI key first</DialogTitle>
                     <DialogDescription></DialogDescription>
                 </DialogHeader>
                 <div className="flex items-center">
-                    <RadioGroup
-                        onValueChange={setAiModel}
-                        defaultValue={aiModel}
-                    >
-                        <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="openAi" id="openAi" />
-                            <Label htmlFor="openAi">Open AI</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="claudeAi" id="claudeAi" />
-                            <Label htmlFor="claudeAi">Claude AI</Label>
-                        </div>
-                    </RadioGroup>
+                    <div className="grid flex-1 gap-2">
+                        <Input
+                            type="text"
+                            errorMessage={error || ''}
+                            placeholder="AI Key"
+                            value={key}
+                            onChange={(e) => {
+                                setKey(e.target.value)
+                                setError(null)
+                            }}
+                        />
+                    </div>
                 </div>
                 <DialogFooter>
                     <Button
@@ -82,7 +82,7 @@ export default function ChooseAIToolDialog({
                             submit()
                         }}
                     >
-                        Next
+                        Save
                     </Button>
                     <DialogClose asChild>
                         <Button type="button" variant="secondary">

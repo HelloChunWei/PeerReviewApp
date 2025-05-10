@@ -7,6 +7,10 @@ const resultFolder = 'results'
 const SAVE_PATH = {
     value: ''
 }
+const AIKeyMap: Record<string, string> = {
+    openAi: 'OPEN_AI',
+    claudeAi: 'CLAUDE_AI'
+}
 
 // pattern: YYYY-MM-DD_Name.md
 export const pathRegx = /^\d{4}-\d{2}-\d{2}_[a-zA-Z0-9]+\.md$/
@@ -137,6 +141,34 @@ export const deleteFile = async(fileName: string) => {
         if (!path?.value) throw new Error('save path not found')
         const combinePath = `${path.value}/${reviewFolder}/${fileName}.md`
         await remove(combinePath, { baseDir: BaseDirectory.AppLocalData })
+    } catch (e) {
+        console.error(e)
+        throw e
+    }
+}
+
+export const getAIKey = async (key: string) => {
+    try {
+        const name = AIKeyMap[key]
+        if (!name) throw new Error('can not found the key name')
+        const store = await load('PeerReviewApp.json', { autoSave: false })
+        // Get a key
+        const keyValue = await store.get<{ value: string }>(name)
+        if(!keyValue?.value) throw new Error('API key not saved')
+        return keyValue.value
+    } catch (e) {
+        console.error(e)
+        throw e
+    }
+}
+
+export const saveAiKey = async(ai: string, key: string) => {
+    try {
+    const name = AIKeyMap[ai]
+    if (!name) throw new Error('can not found the key name')
+    const store = await load('PeerReviewApp.json', { autoSave: false })
+    await store.set(`${name}`, { value: key })
+    await store.save()
     } catch (e) {
         console.error(e)
         throw e
