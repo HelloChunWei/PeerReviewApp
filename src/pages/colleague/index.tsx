@@ -36,7 +36,7 @@ export default function Colleague() {
 
     const debounced = useDebounceCallback((value) => {
         setContent(value)
-        saveFile(key || '', value)
+        saveFile('reviews', key || '', value)
     }, 500)
 
     const showDeleteDialog = () => {

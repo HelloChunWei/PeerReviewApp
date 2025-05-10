@@ -2,6 +2,7 @@ import { useCenterStore } from '@/store'
 import { checkDateIsInTheQuarter } from '@/utils/dayjs'
 import { generateReviewMapByname, generateReviewPrompt } from '@/utils/review'
 import {  getClaudeReview, getOpenAIReview } from '@/api/'
+import {  saveFile } from '@/utils/file'
 
 const apiFunctionMap: Record<string, (prompt: string) => Promise<string>> = {
     openAi: getOpenAIReview,
@@ -30,7 +31,8 @@ export default function useReview () {
                 const reviewData = reviewMap[name]
                 const prompt = await generateReviewPrompt(name, reviewData)
                 const result = await api(prompt)
-                console.log(result)
+                const title = `${quarter}_${name}`
+                await saveFile('results', title, result)
                 return { name, result }
             })
 
