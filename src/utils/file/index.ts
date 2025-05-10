@@ -11,6 +11,10 @@ const AIKeyMap: Record<string, string> = {
     openAi: 'OPEN_AI',
     claudeAi: 'CLAUDE_AI'
 }
+const folderMap = {
+    reviews: reviewFolder,
+    results: resultFolder
+}
 
 // 辅助函数：确保文件名有 .md 后缀
 const ensureMdExtension = (filename: string): string => {
@@ -135,11 +139,12 @@ export const getAllReviewFile = async () => {
     return resultList
 }
 
-export const saveFile = async (fileName: string, content: string) => {
+export const saveFile = async (type:'reviews' | 'results', fileName: string, content: string) => {
     try {
         const path = await getSaveFilePath()
         if (!path?.value) throw new Error('save path not found')
-        const combinePath = `${path.value}/${reviewFolder}/${ensureMdExtension(fileName)}`
+        const folder = folderMap[type]
+        const combinePath = `${path.value}/${folder}/${ensureMdExtension(fileName)}`
         const contents = await writeTextFile(combinePath, content, { baseDir: BaseDirectory.AppLocalData })
         return contents
     } catch (e) {
@@ -185,5 +190,14 @@ export const saveAiKey = async(ai: string, key: string) => {
     } catch (e) {
         console.error(e)
         throw e
+    }
+}
+
+export const createReviewFile = async (title: string, content: string) => {
+    try {
+
+    } catch (err) {
+        console.error(err)
+        throw err
     }
 }

@@ -4,8 +4,8 @@ import Anthropic from '@anthropic-ai/sdk'
 import OpenAI from 'openai'
 
 type Message = {
-  role: 'user' | 'assistant' | 'system';
-  content: string;
+  role: 'user' | 'assistant' | 'system'
+  content: string
 }
 
 const getApiParams = (prompt: string): Message[] => {
@@ -22,9 +22,9 @@ const getApiParams = (prompt: string): Message[] => {
 }
 
 export const getClaudeReview = async (prompt: string): Promise<string>  => {
-  const apiKey = await getAIKey('claudeAi');
+  const apiKey = await getAIKey('claudeAi')
   if (!apiKey) {
-    throw new Error('ANTHROPIC_API_KEY is not set');
+    throw new Error('ANTHROPIC_API_KEY is not set')
   }
 
   const messages = getApiParams(prompt)
@@ -32,33 +32,33 @@ export const getClaudeReview = async (prompt: string): Promise<string>  => {
     const anthropic = new Anthropic({
         apiKey: apiKey,
         dangerouslyAllowBrowser: true
-      });
+      })
       
       const msg = await anthropic.messages.create({
         model: "claude-3-7-sonnet-20250219",
         max_tokens: 1024,
         // @ts-expect-error Anthropic SDK types are not fully compatible
         messages: messages,
-      });
+      })
 
     // @ts-expect-error Anthropic SDK types are not fully compatible
     const text = msg?.content?.[0]?.text
     if (!text) {
-      throw new Error('Invalid response format');
+      throw new Error('Invalid response format')
     }
-    return text;
+    return text
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      throw new Error(`API request failed: ${error.response?.status}`);
+      throw new Error(`API request failed: ${error.response?.status}`)
     }
-    throw error;
+    throw error
   }
 }
 
 export const getOpenAIReview = async(prompt: string): Promise<string> => {
-  const apiKey = await getAIKey('openAi');
+  const apiKey = await getAIKey('openAi')
   if (!apiKey) {
-    throw new Error('OPENAI_API_KEY is not set');
+    throw new Error('OPENAI_API_KEY is not set')
   }
 
   const messages = getApiParams(prompt)
@@ -70,18 +70,18 @@ export const getOpenAIReview = async(prompt: string): Promise<string> => {
       messages,
       max_tokens: 1024,
       temperature: 0.7
-    });
+    })
 
-    const content = response.choices[0]?.message?.content;
+    const content = response.choices[0]?.message?.content
     if (!content) {
-      throw new Error('Invalid response format');
+      throw new Error('Invalid response format')
     }
-    return content;
+    return content
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      throw new Error(`API request failed: ${error.response?.status}`);
+      throw new Error(`API request failed: ${error.response?.status}`)
     }
-    throw error;
+    throw error
   }
 }
 
