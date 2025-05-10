@@ -15,7 +15,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { getAIKey } from '@/utils/file'
 import { useCenterStore } from '@/store'
 import useDialog from '@/hooks/useDialog'
-import AddAiKeyDialog from './AddAiKeyDialog'
+import { Loader2 } from 'lucide-react'
 
 interface ChooseQuarterDialogProps {
     isOpen: boolean
@@ -28,6 +28,7 @@ export default function ChooseQuarterDialog({
 }: ChooseQuarterDialogProps) {
     const { toast } = useToast()
     const { openDialog } = useDialog()
+    const [loading, setLoading] = useState(false)
 
     const getAllquarters = useCenterStore((state) => state.getAllquarters)
     const [selectedQuarter, setSelectedQuarter] = useState<string>('')
@@ -40,12 +41,19 @@ export default function ChooseQuarterDialog({
             })
             return
         }
+        setLoading(true)
         // TODO:
-        close()
+        // close()
     }
 
     return (
-        <Dialog open={isOpen} onOpenChange={close}>
+        <Dialog
+            open={isOpen}
+            onOpenChange={() => {
+                if (loading) return
+                close()
+            }}
+        >
             <DialogContent
                 onPointerDownOutside={(e) => {
                     e.preventDefault()
@@ -74,9 +82,23 @@ export default function ChooseQuarterDialog({
                     </RadioGroup>
                 </div>
                 <DialogFooter>
-                    <Button onClick={submit}>Start review</Button>
+                    <Button
+                        className="min-w-[115px]"
+                        onClick={submit}
+                        disabled={loading}
+                    >
+                        {loading ? (
+                            <Loader2 className="animate-spin" />
+                        ) : (
+                            'Start Review'
+                        )}
+                    </Button>
                     <DialogClose asChild>
-                        <Button type="button" variant="secondary">
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            disabled={loading}
+                        >
                             Cancel
                         </Button>
                     </DialogClose>
