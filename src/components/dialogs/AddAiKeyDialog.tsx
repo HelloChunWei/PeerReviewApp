@@ -37,6 +37,9 @@ export default function AddAiKeyDialog({ isOpen, close }: AddAiKeyDialogProps) {
             })
             setError(null)
             await saveAiKey(choosedAiTool, key)
+            toast({
+                description: 'save successfully',
+            })
         } catch (err) {
             if (err instanceof z.ZodError) {
                 setError(err.errors[0].message)
