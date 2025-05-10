@@ -15,8 +15,6 @@ export default function useReview () {
 
     // quarter will be like: 2025-Q1
     const startReview = async (quarter: string) => {
-        // TODO:
-        // write result into file
         try {
             const api = apiFunctionMap[choosedAiTool]
             if (!api) throw new Error('Can not get API function')
