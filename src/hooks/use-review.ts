@@ -1,5 +1,12 @@
 import { useCenterStore } from '@/store'
 import { checkDateIsInTheQuarter } from '@/utils/dayjs'
+import { generateReviewMapByname, generateReviewPrompt } from '@/utils/review'
+import {  getClaudeReview, getOpenAIReview } from '@/api/'
+
+const apiFunctionMap: Record<string, (prompt: string) => Promise<string>> = {
+    openAi: getOpenAIReview,
+    claudeAi: getClaudeReview
+}
 
 export default function useReview () {
     const choosedAiTool = useCenterStore((state) => state.choosedAiTool)
@@ -7,19 +14,32 @@ export default function useReview () {
 
     // quarter will be like: 2025-Q1
     const startReview = async (quarter: string) => {
-        // TODO: 1 取得 quarter 內的 review
-        // 讀取 file 
-        // send to API review
+        // TODO:
         // write result into file
-        const needReviewList = reviewResult.filter((review) => {
-            const reviewDate = review.split('_');
-            console.log('review', review)
-            const isInTheRange = checkDateIsInTheQuarter(quarter, reviewDate[0])
-            console.log(isInTheRange)
-            console.log('----')
-            return isInTheRange
-        })
-        console.log(needReviewList)
+        try {
+            const api = apiFunctionMap[choosedAiTool]
+            if (!api) throw new Error('Can not get API function')
+            
+            const needReviewList = reviewResult.filter((review) => {
+                const reviewDate = review.split('_');
+                return checkDateIsInTheQuarter(quarter, reviewDate[0])
+            })
+            const reviewMap = await generateReviewMapByname(needReviewList)
+            
+            const promises = Object.keys(reviewMap).map(async (name) => {
+                const reviewData = reviewMap[name]
+                const prompt = await generateReviewPrompt(name, reviewData)
+                const result = await api(prompt)
+                console.log(result)
+                return { name, result }
+            })
+
+            const results = await Promise.all(promises)
+            return results
+        } catch(err) {
+            console.error(err)
+            throw err
+        }
     }
 
     return {

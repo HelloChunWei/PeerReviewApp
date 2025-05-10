@@ -12,6 +12,11 @@ const AIKeyMap: Record<string, string> = {
     claudeAi: 'CLAUDE_AI'
 }
 
+// 辅助函数：确保文件名有 .md 后缀
+const ensureMdExtension = (filename: string): string => {
+    return filename.endsWith('.md') ? filename : `${filename}.md`
+}
+
 // pattern: YYYY-MM-DD_Name.md
 export const pathRegx = /^\d{4}-\d{2}-\d{2}_[a-zA-Z0-9]+\.md$/
 
@@ -102,7 +107,7 @@ export const getReviewFile =  async (name: string) => {
     try {
         const path = await getSaveFilePath()
         if (!path?.value) throw new Error('save path not found')
-        const combinePath = `${path.value}/${reviewFolder}/${name}.md`
+        const combinePath = `${path.value}/${reviewFolder}/${ensureMdExtension(name)}`
         const contents = await readTextFile(combinePath, { baseDir: BaseDirectory.AppLocalData })
         return contents
     } catch (e) {
@@ -134,7 +139,7 @@ export const saveFile = async (fileName: string, content: string) => {
     try {
         const path = await getSaveFilePath()
         if (!path?.value) throw new Error('save path not found')
-        const combinePath = `${path.value}/${reviewFolder}/${fileName}.md`
+        const combinePath = `${path.value}/${reviewFolder}/${ensureMdExtension(fileName)}`
         const contents = await writeTextFile(combinePath, content, { baseDir: BaseDirectory.AppLocalData })
         return contents
     } catch (e) {
@@ -147,7 +152,7 @@ export const deleteFile = async(fileName: string) => {
     try {
         const path = await getSaveFilePath()
         if (!path?.value) throw new Error('save path not found')
-        const combinePath = `${path.value}/${reviewFolder}/${fileName}.md`
+        const combinePath = `${path.value}/${reviewFolder}/${ensureMdExtension(fileName)}`
         await remove(combinePath, { baseDir: BaseDirectory.AppLocalData })
     } catch (e) {
         console.error(e)

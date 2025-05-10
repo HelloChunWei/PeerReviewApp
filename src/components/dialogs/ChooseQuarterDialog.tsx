@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
     Dialog,
@@ -36,17 +36,23 @@ export default function ChooseQuarterDialog({
     const [selectedQuarter, setSelectedQuarter] = useState<string>('')
 
     const submit = async () => {
-        if (!selectedQuarter) {
-            toast({
-                title: 'Please Choose the quarter',
-                variant: 'destructive',
-            })
-            return
+        try {
+            if (!selectedQuarter) {
+                toast({
+                    title: 'Please Choose the quarter',
+                    variant: 'destructive',
+                })
+                return
+            }
+            setLoading(true)
+            await startReview(selectedQuarter)
+            setLoading(false)
+            // TODO:
+            // close()
+        } catch (e) {
+        } finally {
+            setLoading(false)
         }
-        setLoading(true)
-        startReview(selectedQuarter)
-        // TODO:
-        // close()
     }
 
     return (

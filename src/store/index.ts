@@ -1,8 +1,7 @@
 import { create } from 'zustand'
 import dayjs from 'dayjs'
+import { mathPathRegx } from '@/utils/regax'
 
-// add () to match the file name
-export const mathPathRegx = /^(\d{4}-\d{2}-\d{2})_([a-zA-Z0-9\u4e00-\u9fa5]+)\.md$/
 type ReviewMap = {
   [key: string]: string[]
 }
@@ -19,7 +18,7 @@ interface Center {
   setSavePath: (pathString: string) => void
   setReviewResult: (result: string[]) => void
   setAiTool: (result: string) => void
-  getReviewMap: () => ReviewMap
+  getRevieMapByDate: () => ReviewMap
   getSameDateReview: (date: number) => SameDateReviewType
   getAllquarters: () => string[]
   
@@ -31,7 +30,7 @@ export const useCenterStore = create<Center>()((set, get) => ({
     reviewResult: [],
     choosedAiTool: '',
     // getter ==== 
-    getReviewMap: () => {
+    getRevieMapByDate: () => {
       const list = get().reviewResult
       return list.reduce((acc: ReviewMap, cur: string) => {
         const match = cur.match(mathPathRegx)
@@ -45,7 +44,7 @@ export const useCenterStore = create<Center>()((set, get) => ({
       }, {} as ReviewMap)
     },
     getSameDateReview: (date: number) => {
-      const map = get().getReviewMap
+      const map = get().getRevieMapByDate
       const format = dayjs(date).format('YYYY-MM-DD')
       if (map()[format]) {
         const nameList = Object.values(map()[format])

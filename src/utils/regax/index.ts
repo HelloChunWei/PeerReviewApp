@@ -1,0 +1,1 @@
+export const mathPathRegx = /^(\d{4}-\d{2}-\d{2})_([a-zA-Z0-9\u4e00-\u9fa5]+)\.md$/
