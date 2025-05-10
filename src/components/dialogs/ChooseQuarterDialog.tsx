@@ -16,6 +16,7 @@ import { getAIKey } from '@/utils/file'
 import { useCenterStore } from '@/store'
 import useDialog from '@/hooks/use-dialog'
 import { Loader2 } from 'lucide-react'
+import useReview from '@/hooks/use-review'
 
 interface ChooseQuarterDialogProps {
     isOpen: boolean
@@ -27,6 +28,7 @@ export default function ChooseQuarterDialog({
     close,
 }: ChooseQuarterDialogProps) {
     const { toast } = useToast()
+    const { startReview } = useReview()
     const { openDialog } = useDialog()
     const [loading, setLoading] = useState(false)
 
@@ -42,6 +44,7 @@ export default function ChooseQuarterDialog({
             return
         }
         setLoading(true)
+        startReview(selectedQuarter)
         // TODO:
         // close()
     }
