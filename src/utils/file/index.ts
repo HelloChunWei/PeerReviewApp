@@ -118,7 +118,15 @@ export const getAllReviewFile = async () => {
     const reviewFilePath = `${path.value}/${reviewFolder}`
     const entries = await readDir(reviewFilePath, { baseDir: BaseDirectory.AppLocalData })
     const resultList = entries.filter(entry => pathRegx.test(entry.name) && entry.isFile)
-      .map(entry => entry.name)
+      .map(entry => entry.name).sort((a,b) => {
+        // sort date by desc
+        // data: ["2024-05-04", "Ken.md"] 
+        const aDate = a.split('_')
+        const bDate = b.split('_')
+        const aTimeStamp = dayjs(aDate[0]).valueOf()
+        const bTimeStamp = dayjs(bDate[0]).valueOf()
+        return bTimeStamp - aTimeStamp
+      })
     return resultList
 }
 

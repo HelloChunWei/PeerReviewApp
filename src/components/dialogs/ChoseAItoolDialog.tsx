@@ -16,6 +16,7 @@ import { getAIKey } from '@/utils/file'
 import { useCenterStore } from '@/store'
 import useDialog from '@/hooks/useDialog'
 import AddAiKeyDialog from './AddAiKeyDialog'
+import ChooseQuarterDialog from './ChooseQuarterDialog'
 
 interface ChooseAIToolDialogProps {
     isOpen: boolean
@@ -33,9 +34,12 @@ export default function ChooseAIToolDialog({
 
     const submit = async () => {
         try {
-            console.log(aiModel)
             setAiTool(aiModel)
             await getAIKey(aiModel)
+            close()
+            setTimeout(() => {
+                openDialog(ChooseQuarterDialog)
+            }, 300)
         } catch (err) {
             if (err && typeof err === 'object' && 'message' in err) {
                 close()

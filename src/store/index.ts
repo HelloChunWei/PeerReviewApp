@@ -21,6 +21,7 @@ interface Center {
   setAiTool: (result: string) => void
   getReviewMap: () => ReviewMap
   getSameDateReview: (date: number) => SameDateReviewType
+  getAllquarters: () => string[]
   
 } 
 
@@ -56,6 +57,21 @@ export const useCenterStore = create<Center>()((set, get) => ({
         });
       }
       return []
+    },
+    getAllquarters: () => {
+      // Get all quarters from review result
+      // Use Set to avoid duplicate quarters
+      const quarterSet = new Set<string>()
+      get().reviewResult.forEach((filename) => {
+          // Extract date from filename (format: YYYY-MM-DD_name)
+          const date = filename.split('_')[0]
+          // Split year and month
+          const [year, month] = date.split('-')
+          // Calculate quarter number (Q1-Q4) based on month
+          const quarter = `${year}-Q${Math.ceil(parseInt(month) / 3)}`
+          quarterSet.add(quarter)
+      })
+      return Array.from(quarterSet)
     },
     // action ====
     setSavePath: (pathString) => set(() => ({ path:  pathString })),
