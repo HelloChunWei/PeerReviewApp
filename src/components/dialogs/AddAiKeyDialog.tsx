@@ -14,6 +14,8 @@ import { useCenterStore } from '@/store'
 import { Input } from '@/components/ui/input'
 import { saveAiKey } from '@/utils/file'
 import { z } from 'zod'
+import useDialog from '@/hooks/use-dialog'
+import ChooseQuarterDialog from './ChooseQuarterDialog'
 
 interface AddAiKeyDialogProps {
     isOpen: boolean
@@ -26,6 +28,7 @@ const reviewSchema = z.object({
 
 export default function AddAiKeyDialog({ isOpen, close }: AddAiKeyDialogProps) {
     const { toast } = useToast()
+    const { openDialog } = useDialog()
     const choosedAiTool = useCenterStore((state) => state.choosedAiTool)
     const [key, setKey] = useState('')
     const [error, setError] = useState<string | null>(null)
@@ -40,6 +43,10 @@ export default function AddAiKeyDialog({ isOpen, close }: AddAiKeyDialogProps) {
             toast({
                 description: 'save successfully',
             })
+            close()
+            setTimeout(() => {
+                openDialog(ChooseQuarterDialog)
+            }, 300)
         } catch (err) {
             if (err instanceof z.ZodError) {
                 setError(err.errors[0].message)

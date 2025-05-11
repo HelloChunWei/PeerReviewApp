@@ -11,7 +11,8 @@ const SAVE_PATH = {
 }
 const AIKeyMap: Record<string, string> = {
     openAi: 'OPEN_AI',
-    claudeAi: 'CLAUDE_AI'
+    claudeAi: 'CLAUDE_AI',
+    geminiAi: 'GEMINI_AI'
 }
 const folderMap = {
     reviews: reviewFolder,

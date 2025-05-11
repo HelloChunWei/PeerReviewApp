@@ -1,12 +1,13 @@
 import { useCenterStore } from '@/store'
 import { checkDateIsInTheQuarter } from '@/utils/dayjs'
 import { generateReviewMapByname, generateReviewPrompt } from '@/utils/review'
-import {  getClaudeReview, getOpenAIReview } from '@/api/'
+import {  getClaudeReview, getOpenAIReview, getGeminiAIReview } from '@/api/'
 import {  saveFile } from '@/utils/file'
 
 const apiFunctionMap: Record<string, (prompt: string) => Promise<string>> = {
     openAi: getOpenAIReview,
-    claudeAi: getClaudeReview
+    claudeAi: getClaudeReview,
+    geminiAi: getGeminiAIReview
 }
 
 export default function useReview () {

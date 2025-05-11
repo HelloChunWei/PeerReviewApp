@@ -78,6 +78,10 @@ export default function ChooseAIToolDialog({
                             <RadioGroupItem value="claudeAi" id="claudeAi" />
                             <Label htmlFor="claudeAi">Claude AI</Label>
                         </div>
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="geminiAi" id="geminiAi" />
+                            <Label htmlFor="geminiAi">gemini AI</Label>
+                        </div>
                     </RadioGroup>
                 </div>
                 <DialogFooter>
