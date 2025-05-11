@@ -14,10 +14,12 @@ type SameDateReviewType = {
 interface Center {
   path: string
   reviewResult: string[]
+  allPeerReviewResult: string[]
   choosedAiTool: string
   setSavePath: (pathString: string) => void
   setReviewResult: (result: string[]) => void
   setAiTool: (result: string) => void
+  setAllPeerReview: (result: string[]) => void
   getRevieMapByDate: () => ReviewMap
   getSameDateReview: (date: number) => SameDateReviewType
   getAllquarters: () => string[]
@@ -28,6 +30,7 @@ export const useCenterStore = create<Center>()((set, get) => ({
     // state ====
     path: '',
     reviewResult: [],
+    allPeerReviewResult: [],
     choosedAiTool: '',
     // getter ==== 
     getRevieMapByDate: () => {
@@ -81,4 +84,10 @@ export const useCenterStore = create<Center>()((set, get) => ({
       return  {reviewResult: result}
     }),
     setAiTool: (result) =>set(() => ({ choosedAiTool:  result })),
-  }));
+    setAllPeerReview: (result) => set((state) =>{
+      const isSame = result.length === state.allPeerReviewResult.length &&
+      result.every((item, idx) => item === state.allPeerReviewResult[idx])
+      if (isSame) return {}
+      return  {allPeerReviewResult: result}
+    }),
+  }))

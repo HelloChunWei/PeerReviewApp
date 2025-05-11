@@ -53,3 +53,15 @@ export const checkDateIsInTheQuarter = (quarter: string, workLogDate: string) =>
     return false;
 
 }
+
+export const quarterToTimestamp = (quarter: string) => {
+    const [year, quarterNum] = quarter.split('-')
+    const quarterStartDate = quarterMap[quarterNum]
+    return dayjs(`${year}-${quarterStartDate}`).valueOf()
+}
+
+export const compareQuarters = (a: string, b: string) => {
+    const aTimestamp = quarterToTimestamp(a)
+    const bTimestamp = quarterToTimestamp(b)
+    return bTimestamp - aTimestamp
+}

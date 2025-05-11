@@ -12,9 +12,8 @@ import {
 import { useToast } from '@/hooks/use-toast'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { getAIKey } from '@/utils/file'
+import { getAllPeerReviewFile } from '@/utils/file'
 import { useCenterStore } from '@/store'
-import useDialog from '@/hooks/use-dialog'
 import { Loader2 } from 'lucide-react'
 import useReview from '@/hooks/use-review'
 
@@ -29,10 +28,11 @@ export default function ChooseQuarterDialog({
 }: ChooseQuarterDialogProps) {
     const { toast } = useToast()
     const { startReview } = useReview()
-    const { openDialog } = useDialog()
     const [loading, setLoading] = useState(false)
 
     const getAllquarters = useCenterStore((state) => state.getAllquarters)
+    const setAllPeerReview = useCenterStore((state) => state.setAllPeerReview)
+
     const [selectedQuarter, setSelectedQuarter] = useState<string>('')
 
     const submit = async () => {
@@ -46,7 +46,12 @@ export default function ChooseQuarterDialog({
             }
             setLoading(true)
             await startReview(selectedQuarter)
+            // set peer review into store
+            getAllPeerReviewFile().then((result) => {
+                setAllPeerReview(result)
+            })
             setLoading(false)
+
             // TODO:
             // close()
         } catch (e) {

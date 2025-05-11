@@ -15,6 +15,8 @@ import DatePicker from '@/components/datePicker'
 import { z } from 'zod'
 import { createReview } from '@/utils/file/'
 import { useToast } from '@/hooks/use-toast'
+import { useCenterStore } from '@/store'
+import { getAllReviewFile } from '@/utils/file'
 
 const reviewSchema = z.object({
     date: z.date(),
@@ -33,6 +35,7 @@ export default function AddReviewDialog({
     const { toast } = useToast()
     const [date, setDate] = useState<Date>(new Date())
     const [colleagueName, setColleagueName] = useState('')
+    const setReviewResult = useCenterStore((state) => state.setReviewResult)
     const [error, setError] = useState<string | null>(null)
 
     const submit = async () => {
@@ -48,6 +51,10 @@ export default function AddReviewDialog({
             await createReview(date, capitalized)
             toast({
                 description: 'Add successfully',
+            })
+            // set review into store
+            getAllReviewFile().then((result) => {
+                setReviewResult(result)
             })
             setTimeout(() => {
                 close()

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Home, CirclePlus, ChevronDown } from 'lucide-react'
+import { Home, CirclePlus } from 'lucide-react'
 import { Link } from 'react-router'
 import AddReviewDialog from '@/components/dialogs/AddReviewDialog'
 import useDialog from '@/hooks/use-dialog'
@@ -14,12 +14,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import {
-    Collapsible,
-    CollapsibleTrigger,
-    CollapsibleContent,
-} from '@/components/ui/collapsible'
-import { useCenterStore } from '@/store'
+import PeerReviewResult from './PeerReviewResult'
 import WorkLogList from './WorkLogList'
 
 // Menu items.
@@ -33,9 +28,6 @@ const items = [
 
 export function AppSidebar() {
     const { openDialog } = useDialog()
-    const getReviewMapByName = useCenterStore(
-        (state) => state.getReviewMapByName
-    )
 
     const onClick = () => {
         openDialog(AddReviewDialog)
@@ -69,6 +61,8 @@ export function AppSidebar() {
                     </SidebarGroupContent>
                     {/* display work log list group by name */}
                     <WorkLogList />
+                    {/* display peer review result */}
+                    <PeerReviewResult />
                 </SidebarGroup>
             </SidebarContent>
         </Sidebar>

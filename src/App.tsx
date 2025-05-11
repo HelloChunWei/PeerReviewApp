@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { getSaveFilePath } from '@/utils/file'
-import { getAllReviewFile } from '@/utils/file'
+import { getAllReviewFile, getAllPeerReviewFile } from '@/utils/file'
 import { useCenterStore } from '@/store'
 import AppIndex from './pages/home'
 
 function App() {
     const navigate = useNavigate()
     const setReviewResult = useCenterStore((state) => state.setReviewResult)
+    const setAllPeerReview = useCenterStore((state) => state.setAllPeerReview)
 
     useEffect(() => {
         let ignore = false
@@ -19,6 +20,9 @@ function App() {
         })
         getAllReviewFile().then((result) => {
             setReviewResult(result)
+        })
+        getAllPeerReviewFile().then((result) => {
+            setAllPeerReview(result)
         })
         return () => {
             ignore = true

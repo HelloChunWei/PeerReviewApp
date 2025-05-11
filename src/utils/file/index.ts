@@ -1,6 +1,8 @@
 import { load } from '@tauri-apps/plugin-store'
 import { readDir, mkdir, BaseDirectory, create, exists, readTextFile, writeTextFile, remove } from '@tauri-apps/plugin-fs'
 import dayjs from 'dayjs'
+import { quarterToTimestamp } from '@/utils/dayjs'
+import {workLogRegx,  peerReviewRegx} from '@/utils/regax'
 
 const reviewFolder = 'reviews'
 const resultFolder = 'results'
@@ -16,13 +18,10 @@ const folderMap = {
     results: resultFolder
 }
 
-// 辅助函数：确保文件名有 .md 后缀
+
 const ensureMdExtension = (filename: string): string => {
     return filename.endsWith('.md') ? filename : `${filename}.md`
 }
-
-// pattern: YYYY-MM-DD_Name.md
-export const pathRegx = /^\d{4}-\d{2}-\d{2}_[a-zA-Z0-9]+\.md$/
 
 // action
 export const getSaveFilePath = async() => {
@@ -119,6 +118,19 @@ export const getReviewFile =  async (name: string) => {
         throw e
     }
 }
+// calculate
+export const getPeerReviewFile =  async (name: string) => {
+    try {
+        const path = await getSaveFilePath()
+        if (!path?.value) throw new Error('save path not found')
+        const combinePath = `${path.value}/${resultFolder}/${ensureMdExtension(name)}`
+        const contents = await readTextFile(combinePath, { baseDir: BaseDirectory.AppLocalData })
+        return contents
+    } catch (e) {
+        console.error(e)
+        throw e
+    }
+}
 
 // action
 export const getAllReviewFile = async () => {
@@ -126,7 +138,7 @@ export const getAllReviewFile = async () => {
     if (!path?.value) throw new Error('save path not found')
     const reviewFilePath = `${path.value}/${reviewFolder}`
     const entries = await readDir(reviewFilePath, { baseDir: BaseDirectory.AppLocalData })
-    const resultList = entries.filter(entry => pathRegx.test(entry.name) && entry.isFile)
+    const resultList = entries.filter(entry => workLogRegx.test(entry.name) && entry.isFile)
       .map(entry => entry.name).sort((a,b) => {
         // sort date by desc
         // data: ["2024-05-04", "Ken.md"] 
@@ -134,6 +146,24 @@ export const getAllReviewFile = async () => {
         const bDate = b.split('_')
         const aTimeStamp = dayjs(aDate[0]).valueOf()
         const bTimeStamp = dayjs(bDate[0]).valueOf()
+        return bTimeStamp - aTimeStamp
+      })
+    return resultList
+}
+
+export const getAllPeerReviewFile = async () => {
+    const path = await getSaveFilePath()
+    if (!path?.value) throw new Error('save path not found')
+    const resultFilePath = `${path.value}/${resultFolder}`
+    const entries = await readDir(resultFilePath, { baseDir: BaseDirectory.AppLocalData })
+    const resultList = entries.filter(entry => peerReviewRegx.test(entry.name) && entry.isFile)
+      .map(entry => entry.name).sort((a,b) => {
+        // sort date by desc
+        // data: ["2025-Q2", "Ken.md"] 
+        const aDate = a.split('_')
+        const bDate = b.split('_')
+        const aTimeStamp = quarterToTimestamp(aDate[0])
+        const bTimeStamp = quarterToTimestamp(bDate[0])
         return bTimeStamp - aTimeStamp
       })
     return resultList
