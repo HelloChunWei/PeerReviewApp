@@ -1,15 +1,4 @@
 import { create } from 'zustand'
-import dayjs from 'dayjs'
-import { mathPathRegx } from '@/utils/regax'
-
-type ReviewMap = {
-  [key: string]: string[]
-}
-
-type SameDateReviewType = {
-  key: string,
-  name: string,
-}[]
 
 interface Center {
   path: string

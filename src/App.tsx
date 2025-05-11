@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { getSaveFilePath } from '@/utils/file'
 import { getAllReviewFile, getAllPeerReviewFile } from '@/utils/file'

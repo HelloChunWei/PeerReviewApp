@@ -223,12 +223,3 @@ export const saveAiKey = async(ai: string, key: string) => {
         throw e
     }
 }
-
-export const createReviewFile = async (title: string, content: string) => {
-    try {
-
-    } catch (err) {
-        console.error(err)
-        throw err
-    }
-}

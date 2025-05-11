@@ -1,4 +1,3 @@
-import React from 'react'
 import { Home, CirclePlus } from 'lucide-react'
 import { Link } from 'react-router'
 import AddReviewDialog from '@/components/dialogs/AddReviewDialog'

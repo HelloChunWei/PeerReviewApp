@@ -1,4 +1,3 @@
-import React from 'react'
 import FolderSvg from '@/assets/folder.svg'
 import { open } from '@tauri-apps/plugin-dialog'
 import { savePath } from '@/utils/file'
@@ -24,7 +23,7 @@ export default function Home() {
             await savePath(file)
             setSavePath(file)
             navigate('/')
-        } catch (e) {
+        } catch (_) {
             toast('something went wrong')
         }
     }
