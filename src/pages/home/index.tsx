@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { SidebarTrigger } from '@/components/ui/sidebar'
-import { useNavigate } from 'react-router'
-import { getSaveFilePath } from '@/utils/file'
 import { formatDate, getThreeDays } from '@/utils/dayjs'
 import { clsx } from 'clsx/lite'
 import { useIntersectionObserver } from 'usehooks-ts'
-import { getAllReviewFile } from '@/utils/file'
 import { useCenterStore } from '@/store'
 import { Link } from 'react-router'
 import { Play } from 'lucide-react'
@@ -19,24 +16,8 @@ function App() {
         threshold: 0.5,
     })
 
-    const navigate = useNavigate()
-    const setReviewResult = useCenterStore((state) => state.setReviewResult)
     const getSameDateReview = useCenterStore((state) => state.getSameDateReview)
     const [dateList, setDateList] = useState(() => getThreeDays())
-
-    getAllReviewFile().then((result) => setReviewResult(result))
-    useEffect(() => {
-        let ignore = false
-        getSaveFilePath().then((path) => {
-            if (ignore) return
-            if (!path) {
-                return navigate('/welcome')
-            }
-        })
-        return () => {
-            ignore = true
-        }
-    }, [])
 
     useEffect(() => {
         setDateList([

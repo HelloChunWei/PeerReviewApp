@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { useParams } from 'react-router'
 import {
@@ -27,6 +27,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import DeleteFileDialog from '@/components/dialogs/DeleteFileDialog'
+import dayjs from 'dayjs'
 
 export default function Colleague() {
     const { key } = useParams()
@@ -47,12 +48,18 @@ export default function Colleague() {
         }, 0)
     }
 
+    const title = useMemo(() => {
+        const split = key?.split('_')
+        if (!split) return key
+        return `${dayjs(split[0]).format('YYYY/MM/DD')} ${split[1]} `
+    }, [key])
+
     useEffect(() => {
         getReviewFile(key || '').then((worklog) => {
             setContent(worklog)
             setKey((prev) => prev + 1)
         })
-    }, [])
+    }, [key])
 
     return (
         <main className="min-h-svh flex flex-1 relative">
@@ -70,6 +77,9 @@ export default function Colleague() {
                     </DropdownMenuContent>
                 </DropdownMenu>
                 <div className="mx-auto w-3/4">
+                    <h1 className="text-5xl text-center mb-10 font-bold">
+                        {title}
+                    </h1>
                     <div className="mb-4 dark-theme prose dark:prose-invert max-w-none">
                         <MDXEditor
                             key={mdxKey}
