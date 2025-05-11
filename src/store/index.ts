@@ -20,8 +20,6 @@ interface Center {
   setReviewResult: (result: string[]) => void
   setAiTool: (result: string) => void
   setAllPeerReview: (result: string[]) => void
-  getRevieMapByDate: () => ReviewMap
-  getSameDateReview: (date: number) => SameDateReviewType
   getAllquarters: () => string[]
   
 } 
@@ -32,34 +30,6 @@ export const useCenterStore = create<Center>()((set, get) => ({
     reviewResult: [],
     allPeerReviewResult: [],
     choosedAiTool: '',
-    // getter ==== 
-    getRevieMapByDate: () => {
-      const list = get().reviewResult
-      return list.reduce((acc: ReviewMap, cur: string) => {
-        const match = cur.match(mathPathRegx)
-        if (match) {
-          const date = match[1]
-          const name = match[2]
-          if (!acc[date]) acc[date] = []
-          if (!acc[date].includes(name)) acc[date].push(name)
-        }
-        return acc
-      }, {} as ReviewMap)
-    },
-    getSameDateReview: (date: number) => {
-      const map = get().getRevieMapByDate
-      const format = dayjs(date).format('YYYY-MM-DD')
-      if (map()[format]) {
-        const nameList = Object.values(map()[format])
-        return nameList.map((name) => {
-          return {
-            key: `${format}_${name}`,
-            name
-          }
-        });
-      }
-      return []
-    },
     getAllquarters: () => {
       // Get all quarters from review result
       // Use Set to avoid duplicate quarters

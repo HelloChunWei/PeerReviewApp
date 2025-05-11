@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { formatDate, getThreeDays } from '@/utils/dayjs'
 import { clsx } from 'clsx/lite'
@@ -9,6 +9,12 @@ import { Play } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import useDialog from '@/hooks/use-dialog'
 import ChooseAIToolDialog from '@/components/dialogs/ChoseAItoolDialog'
+import dayjs from 'dayjs'
+import { mathPathRegx } from '@/utils/regax'
+
+type ReviewMap = {
+    [key: string]: string[]
+}
 
 function App() {
     const { openDialog } = useDialog()
@@ -16,7 +22,38 @@ function App() {
         threshold: 0.5,
     })
 
-    const getSameDateReview = useCenterStore((state) => state.getSameDateReview)
+    const reviewResult = useCenterStore((state) => state.reviewResult)
+    const getRevieMapByDate = useMemo(() => {
+        const list = reviewResult
+        return list.reduce((acc: ReviewMap, cur: string) => {
+            const match = cur.match(mathPathRegx)
+            if (match) {
+                const date = match[1]
+                const name = match[2]
+                if (!acc[date]) acc[date] = []
+                if (!acc[date].includes(name)) acc[date].push(name)
+            }
+            return acc
+        }, {} as ReviewMap)
+    }, [reviewResult])
+
+    const getSameDateReview = useCallback(
+        (date: number) => {
+            const map = getRevieMapByDate
+            const format = dayjs(date).format('YYYY-MM-DD')
+            if (map[format]) {
+                const nameList = Object.values(map[format])
+                return nameList.map((name) => {
+                    return {
+                        key: `${format}_${name}`,
+                        name,
+                    }
+                })
+            }
+            return []
+        },
+        [getRevieMapByDate]
+    )
     const [dateList, setDateList] = useState(() => getThreeDays())
 
     useEffect(() => {
