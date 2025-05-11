@@ -16,6 +16,7 @@ import { getAllPeerReviewFile } from '@/utils/file'
 import { useCenterStore } from '@/store'
 import { Loader2 } from 'lucide-react'
 import useReview from '@/hooks/use-review'
+import { Progress } from '@/components/ui/progress'
 
 interface ChooseQuarterDialogProps {
     isOpen: boolean
@@ -28,6 +29,7 @@ export default function ChooseQuarterDialog({
 }: ChooseQuarterDialogProps) {
     const { toast } = useToast()
     const { startReview } = useReview()
+    const [progress, setProgress] = useState(0)
     const [loading, setLoading] = useState(false)
 
     const getAllquarters = useCenterStore((state) => state.getAllquarters)
@@ -45,16 +47,26 @@ export default function ChooseQuarterDialog({
                 return
             }
             setLoading(true)
-            await startReview(selectedQuarter)
+            await startReview(selectedQuarter, (percent: number) => {
+                setProgress(percent)
+            })
             // set peer review into store
             getAllPeerReviewFile().then((result) => {
                 setAllPeerReview(result)
             })
             setLoading(false)
+            toast({
+                description: 'peer review complete',
+            })
 
-            // TODO:
-            // close()
-        } catch (e) {
+            close()
+        } catch (err) {
+            if (err && typeof err === 'object' && 'message' in err) {
+                toast({
+                    variant: 'destructive',
+                    description: err.message as string,
+                })
+            }
         } finally {
             setLoading(false)
         }
@@ -94,6 +106,9 @@ export default function ChooseQuarterDialog({
                             </div>
                         ))}
                     </RadioGroup>
+                </div>
+                <div className="flex items-center">
+                    {loading ? <Progress value={progress} /> : null}
                 </div>
                 <DialogFooter>
                     <Button

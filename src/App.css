@@ -145,6 +145,7 @@
   --baseTextContrast: rgb(244, 244, 245);
   --tw-prose-body: rgb(244, 244, 245);
   --tw-prose-code: hsl(322 75% 46%);
+  --tw-prose-bold: rgb(244, 244, 245);
 }
 
 .prose code::before,

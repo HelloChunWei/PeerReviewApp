@@ -13,7 +13,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { ChevronDown, Calendar } from 'lucide-react'
+import { ChevronDown, User } from 'lucide-react'
 import { useNavigate } from 'react-router'
 
 export default function PeerReviewResult() {
@@ -84,7 +84,7 @@ export default function PeerReviewResult() {
                                                                                 )
                                                                             }}
                                                                         >
-                                                                            <Calendar />
+                                                                            <User />
                                                                             <span>
                                                                                 {
                                                                                     name

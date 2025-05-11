@@ -14,7 +14,7 @@ export default function useReview () {
     const reviewResult = useCenterStore((state) => state.reviewResult)
 
     // quarter will be like: 2025-Q1
-    const startReview = async (quarter: string) => {
+    const startReview = async (quarter: string, updateProgress: (percent: number) => void) => {
         try {
             const api = apiFunctionMap[choosedAiTool]
             if (!api) throw new Error('Can not get API function')
@@ -24,17 +24,28 @@ export default function useReview () {
                 return checkDateIsInTheQuarter(quarter, reviewDate[0])
             })
             const reviewMap = await generateReviewMapByname(needReviewList)
+            const keyList = Object.keys(reviewMap)
             
-            const promises = Object.keys(reviewMap).map(async (name) => {
-                const reviewData = reviewMap[name]
-                const prompt = await generateReviewPrompt(name, reviewData)
-                const result = await api(prompt)
-                const title = `${quarter}_${name}`
-                await saveFile('results', title, result)
-                return { name, result }
-            })
-
-            const results = await Promise.all(promises)
+            const chunkSize = 4
+            const results = []
+            
+            // Process 4 reviews at a time to avoid overwhelming the API
+            for (let i = 0; i < keyList.length; i += chunkSize) {
+                const chunk = keyList.slice(i, i + chunkSize)
+                const promises = chunk.map(async (name) => {
+                    const reviewData = reviewMap[name]
+                    const prompt = await generateReviewPrompt(name, reviewData)
+                    const result = await api(prompt)
+                    const title = `${quarter}_${name}`
+                    await saveFile('results', title, result)
+                    return { name, result }
+                })
+                
+                const chunkResults = await Promise.all(promises)
+                results.push(...chunkResults)
+                updateProgress(Math.round((results.length / keyList.length) * 100))
+            }
+            
             return results
         } catch(err) {
             console.error(err)
