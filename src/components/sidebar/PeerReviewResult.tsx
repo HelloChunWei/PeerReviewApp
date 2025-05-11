@@ -45,7 +45,7 @@ export default function PeerReviewResult() {
     return (
         <>
             {allPeerReviewResult.length > 0 ? (
-                <Collapsible defaultOpen className="group/collapsible-outer">
+                <Collapsible className="group/collapsible-outer">
                     <SidebarGroup>
                         <SidebarGroupLabel asChild>
                             <CollapsibleTrigger>
