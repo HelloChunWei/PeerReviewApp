@@ -94,10 +94,7 @@ After the review is complete, you can find the peer review results in the sideba
 <img width="776" alt="截圖 2025-05-12 晚上11 24 21" src="https://github.com/user-attachments/assets/cb7f6de2-2e5d-4e0c-9e76-caefb3e30b35" />
 
 
-# Tauri + React + Typescript
+------
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
-
-## Recommended IDE Setup
-
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+# Tech - Tauri + React + Typescript
+## package: shadcn/ui + tailwindcss + zustand + zod + mdxeditor
