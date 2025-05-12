@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/sidebar'
 import PeerReviewResult from './PeerReviewResult'
 import WorkLogList from './WorkLogList'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 // Menu items.
 const items = [
@@ -33,37 +34,39 @@ export function AppSidebar() {
     }
     return (
         <Sidebar>
-            <SidebarContent>
-                <SidebarGroup>
-                    <SidebarGroupLabel>Peer Review</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton onClick={onClick}>
-                                    <CirclePlus />
-                                    <span>Add new work log</span>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                        </SidebarMenu>
-                        <SidebarMenu>
-                            {items.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
-                                        <Link to={item.url}>
-                                            <item.icon />
-                                            <span>{item.title}</span>
-                                        </Link>
+            <ScrollArea>
+                <SidebarContent>
+                    <SidebarGroup>
+                        <SidebarGroupLabel>Peer Review</SidebarGroupLabel>
+                        <SidebarGroupContent>
+                            <SidebarMenu>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton onClick={onClick}>
+                                        <CirclePlus />
+                                        <span>Add new work log</span>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                    {/* display work log list group by name */}
-                    <WorkLogList />
-                    {/* display peer review result */}
-                    <PeerReviewResult />
-                </SidebarGroup>
-            </SidebarContent>
+                            </SidebarMenu>
+                            <SidebarMenu>
+                                {items.map((item) => (
+                                    <SidebarMenuItem key={item.title}>
+                                        <SidebarMenuButton asChild>
+                                            <Link to={item.url}>
+                                                <item.icon />
+                                                <span>{item.title}</span>
+                                            </Link>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                ))}
+                            </SidebarMenu>
+                        </SidebarGroupContent>
+                        {/* display work log list group by name */}
+                        <WorkLogList />
+                        {/* display peer review result */}
+                        <PeerReviewResult />
+                    </SidebarGroup>
+                </SidebarContent>
+            </ScrollArea>
         </Sidebar>
     )
 }
