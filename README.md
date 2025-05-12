@@ -81,6 +81,18 @@ Your key will be stored locally in ``~/Library/Application Support/com.PeerRevie
 
 <img width="1151" alt="截圖 2025-05-12 晚上11 19 09" src="https://github.com/user-attachments/assets/5403a93f-d82a-44e4-a853-975ddc03c80f" />
 
+Next, you can select which quarter you want to review, it will take some time.
+
+<img width="1198" alt="截圖 2025-05-12 晚上11 19 52" src="https://github.com/user-attachments/assets/ca47a405-25e8-4ea2-bb73-827b77a4f36a" />
+
+
+After the review is complete, you can find the peer review results in the sidebar or in the folder you specified during setup.
+
+<img width="1224" alt="截圖 2025-05-12 晚上11 23 20" src="https://github.com/user-attachments/assets/e794697f-c032-41f8-bb03-e723a80ac1de" />
+
+
+<img width="776" alt="截圖 2025-05-12 晚上11 24 21" src="https://github.com/user-attachments/assets/cb7f6de2-2e5d-4e0c-9e76-caefb3e30b35" />
+
 
 # Tauri + React + Typescript
 
