@@ -10,11 +10,13 @@ All related data is stored locally in `~/Library/Application Support/com.PeerRev
 
 ## Download
 Download link: https://github.com/HelloChunWei/PeerReviewApp/releases/tag/1.1.1
-Click on the .dmg file and then click to install the application.
+
+Click on the `.dmg` file to download it and then click to install the application.
 
 <img width="692" alt="截圖 2025-05-12 晚上11 01 05" src="https://github.com/user-attachments/assets/0b69695e-c62b-4a4c-8a2b-6611fc0b5f4a" />
 
 ## Installation Instructions
+
 After installation, open your terminal and run:
 
 ``sudo xattr -rd com.apple.quarantine $PATH``
