@@ -17,6 +17,7 @@ import { useCenterStore } from '@/store'
 import { Loader2 } from 'lucide-react'
 import useReview from '@/hooks/use-review'
 import { Progress } from '@/components/ui/progress'
+import { Checkbox } from '@/components/ui/checkbox'
 
 interface ChooseQuarterDialogProps {
     isOpen: boolean
@@ -31,6 +32,7 @@ export default function ChooseQuarterDialog({
     const { startReview } = useReview()
     const [progress, setProgress] = useState(0)
     const [loading, setLoading] = useState(false)
+    const [needReset, setNeedReset] = useState(false)
 
     const getAllquarters = useCenterStore((state) => state.getAllquarters)
     const setAllPeerReview = useCenterStore((state) => state.setAllPeerReview)
@@ -47,7 +49,7 @@ export default function ChooseQuarterDialog({
                 return
             }
             setLoading(true)
-            await startReview(selectedQuarter, (percent: number) => {
+            await startReview(selectedQuarter, needReset, (percent: number) => {
                 setProgress(percent)
             })
             // set peer review into store
@@ -91,7 +93,22 @@ export default function ChooseQuarterDialog({
                         Please select a quarter you want to review
                     </DialogDescription>
                 </DialogHeader>
-                <div className="flex items-center">
+                <div className="flex items-center space-x-2">
+                    <Checkbox
+                        id="reset"
+                        checked={needReset}
+                        onCheckedChange={(value) => {
+                            setNeedReset(value === true)
+                        }}
+                    />
+                    <label
+                        htmlFor="reset"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                        Do you want to overwrite the existing result?
+                    </label>
+                </div>
+                <div className="flex items-center mt-3">
                     <RadioGroup
                         value={selectedQuarter}
                         onValueChange={setSelectedQuarter}

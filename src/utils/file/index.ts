@@ -53,7 +53,7 @@ const createFolderIfNotExist = async (path: string, folderName: string) => {
 // action
 const createFile = async (filename: string) => {
     const isExist = await exists(`${filename}`, { baseDir: BaseDirectory.AppLocalData })
-      if (isExist) throw new Error('A work log for this colleague already exists for this date')
+    if (isExist) throw new Error('A work log for this colleague already exists for this date')
     const file = await create(`${filename}`, { baseDir: BaseDirectory.AppData })
     await file.close()
 }
@@ -64,6 +64,13 @@ const createPathAndFileName = (payload: {
     folderName: string,
     fileName: string,
 }) => `${payload.path}/${payload.folderName}/${payload.fileName}`
+
+export const checkHasResultFile = async (filename: string) => {
+    const path = await getSaveFilePath();
+    if (!path?.value) throw new Error('save path not found');
+    const isExist = await exists(`${path.value}/${resultFolder}/${ensureMdExtension(filename)}`, { baseDir: BaseDirectory.AppLocalData })
+    return isExist
+}
 
 // action
 export const createReview = async(date: Date, colleagueName: string) =>{
