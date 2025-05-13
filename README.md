@@ -92,7 +92,8 @@ Your key will be stored locally in ``~/Library/Application Support/com.PeerRevie
 
 Next, you can select which quarter you want to review, it will take some time. You can also choose whether to overwrite the old result.
 
-<img width="806" alt="截圖 2025-05-13 晚上9 26 14" src="https://github.com/user-attachments/assets/5d6238be-671d-4999-bd49-f90f8e9a4dcb" />
+<img width="1220" alt="截圖 2025-05-13 晚上10 33 37" src="https://github.com/user-attachments/assets/e990e700-e00c-45e8-af26-40037d214392" />
+
 
 
 
