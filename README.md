@@ -39,6 +39,10 @@ Enter your password and press Enter again to complete the process. (Note: When t
 
 <img width="1594" alt="截圖 2025-05-12 晚上11 08 42" src="https://github.com/user-attachments/assets/0f2705de-d984-4ce8-a1e7-569ee664d314" />
 
+This command ``sudo xattr -rd com.apple.quarantine`` is used on macOS to remove the quarantine attribute from files or folders. 
+
+When you download files from the internet, macOS adds this attribute as a security measure. Running this command bypasses the security warning that appears when opening downloaded applications, especially those from unverified developers. Just make sure the file is from a trusted source before removing this protection.
+
 
 You can now open the application!
 
