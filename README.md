@@ -1,4 +1,5 @@
 # PeerReviewApp
+**You can use AI to help you complete peer review**
 
 ## Important Information:
 This is my side project. Since I haven't purchased an Apple Developer Program membership, you'll need to run terminal commands to open the app.
